@@ -1,0 +1,31 @@
+{
+  "name": "weiaibaicai/dcat-operation-log",
+  "description": "Dcat Admin 操作日志扩展",
+  "type": "library",
+  "keywords": ["dcat-admin", "extension"],
+  "homepage": "",
+  "license": "MIT",
+  "authors": [
+    {
+        "name": "weiaibaicai",
+        "email": "923108452@qq.com"
+    }
+  ],
+  "require": {
+        "php": ">=7.4.0",
+        "dcat/laravel-admin": "~2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Weiaibaicai\\OperationLog\\": "src/"
+    }
+  },
+  "extra": {
+    "dcat-admin": "Weiaibaicai\\OperationLog\\OperationLogServiceProvider",
+    "laravel": {
+      "providers": [
+        "Weiaibaicai\\OperationLog\\OperationLogServiceProvider"
+      ]
+    }
+  }
+}
