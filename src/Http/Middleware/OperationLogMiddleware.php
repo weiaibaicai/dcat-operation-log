@@ -4,13 +4,19 @@ namespace Weiaibaicai\OperationLog\Http\Middleware;
 
 use Dcat\Admin\Admin;
 use Weiaibaicai\OperationLog\Models\OperationLog as OperationLogModel;
-use Weiaibaicai\OperationLog\OperationLogServiceProvider;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class OperationLogMiddleware
 {
+    public function isLogin(): bool
+    {
+        $user = Admin::user();
+
+        return (bool)$user;
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -25,11 +31,13 @@ class OperationLogMiddleware
             $user = Admin::user();
 
             $log = [
-                'user_id' => $user ? $user->id : 0,
-                'path'    => substr($request->path(), 0, 255),
-                'method'  => $request->method(),
-                'ip'      => $request->getClientIp(),
-                'input'   => $this->formatInput($request->input()),
+                'user_id'     => $user ? $user->id : 0,
+                'path'        => substr($request->path(), 0, 255),
+                'method'      => $request->method(),
+                'ip'          => $request->getClientIp(),
+                'input'       => $this->formatInput($request->input()),
+                'app_type'    => Admin::app()->getName(),
+                'target_type' => OperationLogModel::getUsersMap($user->getTable()),
             ];
 
             try {
@@ -76,7 +84,7 @@ class OperationLogMiddleware
      */
     protected function shouldLogOperation(Request $request)
     {
-        return !$this->inExceptArray($request) && $this->inAllowedMethods($request->method());
+        return !$this->inExceptArray($request) && $this->inAllowedMethods($request->method()) && $this->isLogin();
     }
 
     /**

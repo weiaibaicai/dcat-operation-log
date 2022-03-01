@@ -11,7 +11,7 @@ class OperationLog extends Model
 
     protected $table = 'admin_operation_log';
 
-    protected $fillable = ['user_id', 'path', 'method', 'ip', 'input'];
+    protected $fillable = ['user_id', 'path', 'method', 'ip', 'input', 'app_type','target_type'];
 
     public static $methodColors = [
         'GET'    => 'primary',
@@ -32,13 +32,31 @@ class OperationLog extends Model
         parent::__construct($attributes);
     }
 
-    /**
-     * Log belongs to users.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function user()
     {
-        return $this->belongsTo(config('admin.database.users_model'));
+
+        return $this->morphTo('user', 'target_type', 'user_id');
+    }
+
+    /**
+     * 是否需要路由
+     *
+     * @return bool
+     */
+    public static function withRoutes():bool
+    {
+        return empty(config('admin.extensions.dcat_operation_log.close_routes'));
+    }
+
+    /**
+     * 获取表的映射关系
+     *
+     * @param string $table 用户表
+     *
+     * @return string
+     */
+    public static function getUsersMap(string  $table):string
+    {
+        return config(sprintf('operation-log.users_map.%s', $table)) ?? '';
     }
 }

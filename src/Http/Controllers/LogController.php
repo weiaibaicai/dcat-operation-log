@@ -9,6 +9,8 @@ use Weiaibaicai\OperationLog\Models\OperationLog;
 use Weiaibaicai\OperationLog\OperationLogServiceProvider;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Arr;
+use Dcat\Admin\Admin;
+
 
 class LogController
 {
@@ -22,6 +24,7 @@ class LogController
     protected function grid()
     {
         return new Grid(OperationLog::with('user'), function (Grid $grid) {
+            $grid->model()->where('app_type', Admin::app()->getName());
             $grid->column('id', 'ID')->sortable();
             $grid->column('user', trans('admin.user'))->display(function ($user) {
                 if (!$user) {
@@ -92,7 +95,7 @@ class LogController
     {
         $ids = explode(',', $id);
 
-        OperationLog::destroy(array_filter($ids));
+        OperationLog::query()->where('app_type', Admin::app()->getName())->whereIn('id',array_filter($ids))->delete();
 
         return JsonResponse::make()->success(trans('admin.delete_succeeded'))->refresh()->send();
     }

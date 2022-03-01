@@ -15,4 +15,9 @@ return [
 
     //允许的方法
     'allowed_methods' => ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH'],
+
+    //多后台用户表与其模型命名空间的映射关系
+    'users_map' => [
+        'admin_users' => 'App\Models\AdminUser',
+    ]
 ];
