@@ -38,7 +38,7 @@ php artisan vendor:publish --provider="Weiaibaicai\OperationLog\OperationLogServ
     ]
 ```
 
-4、多后台，需要配置管理员用户的映射关系，记得不把模型补上
+4、多后台，需要配置管理员用户的映射关系，记得把模型补上
 ```
     'users_map' => [
         'admin_users' => 'App\Models\AdminUser',
